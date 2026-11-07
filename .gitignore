@@ -41,3 +41,6 @@ next-env.d.ts
 # Claude Code
 CLAUDE.md
 .claude/
+
+# AI agents
+AGENTS.md
