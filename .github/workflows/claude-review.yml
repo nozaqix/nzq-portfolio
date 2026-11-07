@@ -6,8 +6,8 @@ on:
 
 jobs:
   review:
-    # 下書きと、外の人のコピーから来た PR では動かさない
-    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
+    # 下書き、外の人のコピーから来た PR、Dependabot の PR では動かさない
+    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
