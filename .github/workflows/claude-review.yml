@@ -32,3 +32,7 @@ jobs:
             最後に `gh pr comment` で短いまとめを1つ投稿してください。問題がなければ、そのように短く書いてください。
           claude_args: |
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+
+      - name: Show Claude error
+        if: failure()
+        run: jq -r '.[] | select(.type == "result") | .result // "no result"' "$RUNNER_TEMP/claude-execution-output.json"
