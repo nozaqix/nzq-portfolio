@@ -12,17 +12,18 @@ export default function Header() {
           >
             Index
           </Link>
+          {/* TEMP: Works / Release を Discography にまとめ、Journal を追加 */}
           <Link
-            href="/works/"
+            href="/discography/"
             className="text-gray-300 hover:text-white transition-colors"
           >
-            Works
+            Discography
           </Link>
           <Link
-            href="/release/"
+            href="/journal/"
             className="text-gray-300 hover:text-white transition-colors"
           >
-            Release
+            Journal
           </Link>
           <Link
             href="/profile/"

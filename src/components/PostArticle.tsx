@@ -1,7 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllSlugs } from '@/lib/posts';
 import YouTube from '@/components/mdx/YouTube';
 import WebGPUDemo from '@/components/mdx/WebGPUDemo';
 import PurchaseLinks from '@/components/mdx/PurchaseLinks';
@@ -9,48 +7,9 @@ import SkeletonImage from '@/components/SkeletonImage';
 import BackgroundImagePreloader from '@/components/BackgroundImagePreloader';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import type { Metadata } from 'next';
+import type { Post } from '@/lib/posts';
 
-interface PageProps {
-  params: Promise<{
-    slug: string;
-  }>;
-}
-
-export async function generateStaticParams() {
-  const slugs = getAllSlugs('works');
-  return slugs.map(({ slug }) => ({
-    slug,
-  }));
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug, 'works');
-
-  if (!post) {
-    return {};
-  }
-
-  return {
-    title: post.frontmatter.title,
-    alternates: {
-      canonical: `https://nozaqi.work/works/${slug}/`,
-    },
-    openGraph: {
-      title: post.frontmatter.title,
-      type: 'article',
-      url: `https://nozaqi.work/works/${slug}/`,
-      ...(post.frontmatter.thumbnail && {
-        images: [{ url: post.frontmatter.thumbnail }],
-      }),
-    },
-    twitter: {
-      card: post.frontmatter.thumbnail ? 'summary_large_image' : 'summary',
-    },
-  };
-}
-
+// TEMP: works/[slug]/page.tsx から記事の表示を切り出した共通部品（discography と journal で使う）
 // HTMLコンテンツから画像URLを抽出する関数
 function extractImageUrls(html: string): string[] {
   const imageUrls: string[] = [];
@@ -193,14 +152,13 @@ const formatDate = (dateString: string): string => {
   return `${year}.${month}.${day}`;
 };
 
-export default async function PostPage({ params }: PageProps) {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug, 'works');
 
-  if (!post || !post.htmlContent) {
-    notFound();
-  }
+interface PostArticleProps {
+  post: Post & { htmlContent: string };
+  parent?: { href: string; label: string };
+}
 
+export default function PostArticle({ post, parent }: PostArticleProps) {
   // 記事内の画像URLを抽出
   const imageUrls = extractImageUrls(post.htmlContent);
   // サムネイルも追加
@@ -225,13 +183,13 @@ export default async function PostPage({ params }: PageProps) {
               <Link href="/" className="text-xs text-[#B8B9BA] font-normal leading-normal tracking-[0.6px] font-inter hover:opacity-70 transition-opacity">
                 Home
               </Link>
-              {post.frontmatter.category === 'Release' && (
+              {parent && (
                 <>
                   <span className="text-xs text-[#B8B9BA] font-normal leading-normal tracking-[0.6px] font-inter mx-2">
                     {'>'}
                   </span>
-                  <Link href="/works/" className="text-xs text-[#B8B9BA] font-normal leading-normal tracking-[0.6px] font-inter hover:opacity-70 transition-opacity">
-                    Works
+                  <Link href={parent.href} className="text-xs text-[#B8B9BA] font-normal leading-normal tracking-[0.6px] font-inter hover:opacity-70 transition-opacity">
+                    {parent.label}
                   </Link>
                 </>
               )}
