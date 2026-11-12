@@ -27,7 +27,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getPostBySlug(slug, 'journal');
 
   if (!post) {
-    return {};
+    // TEMP: 記事が 0 本のあいだの仮のページ（/journal/_/）は 200 で返るので、検索に載らないようにする
+    return { robots: { index: false, follow: false } };
   }
 
   return {
