@@ -16,9 +16,10 @@ const formatDate = (dateString: string): string => {
   if (Number.isNaN(date.getTime())) {
     return '';
   }
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  // TEMP: frontmatter の日付は UTC の 0 時になるので、見る人のタイムゾーンで日がずれないよう UTC で読む
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
   return `${year}.${month}.${day}`;
 };
 

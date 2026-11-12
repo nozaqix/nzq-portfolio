@@ -12,11 +12,17 @@ export const metadata: Metadata = {
   },
 };
 
+function toIsoString(value: unknown): string {
+  const date = new Date(value as string);
+  return Number.isNaN(date.getTime()) ? '' : date.toISOString();
+}
+
 export default async function JournalPage() {
   const items = getAllPosts('journal').map((post) => ({
     slug: post.slug,
     title: post.frontmatter.title,
-    date: post.frontmatter.date,
+    // TEMP: gray-matter は date を Date で返すので、クライアント部品に渡す前に文字列にする
+    date: toIsoString(post.frontmatter.date),
     category: post.frontmatter.category,
   }));
 
