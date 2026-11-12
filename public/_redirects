@@ -12,3 +12,8 @@ http://nzq.pages.dev/* https://nozaqi.work/:splat 301
 
 
 
+# TEMP: 制作楽曲を /works/ と /release/ から /discography/ に移した（NZQ-142）
+/works /discography/ 301
+/works/* /discography/:splat 301
+/release /discography/ 301
+/release/* /discography/ 301

@@ -5,9 +5,10 @@ import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import remarkGfm from 'remark-gfm';
 
-export type ContentSection = 'works';
+// TEMP: works を discography に改名し、journal（日記と開発の記事）を追加
+export type ContentSection = 'discography' | 'journal';
 
-const CONTENT_SECTIONS: ContentSection[] = ['works'];
+const CONTENT_SECTIONS: ContentSection[] = ['discography', 'journal'];
 
 function getPostsDirectory(section: ContentSection): string {
   return typeof process !== 'undefined' && process.cwd
