@@ -2,7 +2,13 @@ name: Claude Review
 
 on:
   pull_request:
-    types: [opened, ready_for_review]
+    # TEMP: synchronize（PR に push されたとき）を足して、直しの push もレビューする
+    types: [opened, synchronize, ready_for_review]
+
+# TEMP: 続けて push したとき、同じ PR の古いレビューを止めて、最新の分だけをレビューする
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   review:
@@ -22,6 +28,7 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # TEMP: プロンプトの最後に、push のたびに前と同じ指摘を繰り返さないよう頼む 1 文を足した
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
@@ -30,6 +37,7 @@ jobs:
             バグ、セキュリティ、壊れやすさなど、直す価値のある指摘だけを日本語で書いてください。
             行に結びつく指摘はインラインコメントにしてください。
             最後に `gh pr comment` で短いまとめを1つ投稿してください。問題がなければ、そのように短く書いてください。
+            すでにレビューしたことのある PR なら、`gh pr view --comments` で前のコメントを確かめ、同じ指摘は繰り返さないでください。
           claude_args: |
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
 
