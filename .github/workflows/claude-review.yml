@@ -2,7 +2,6 @@ name: Claude Review
 
 on:
   pull_request:
-    # TEMP: synchronize（PR に push されたとき）を足して、直しの push もレビューする
     types: [opened, synchronize, ready_for_review]
 
 jobs:
@@ -10,8 +9,7 @@ jobs:
     # 下書き、外の人のコピーから来た PR、Dependabot の PR では動かさない
     if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
-    # TEMP: 続けて push したとき、同じ PR の古いレビューを止めて、最新の分だけをレビューする。
-    # job に置くと、下書きなどで job が飛ばされた実行は、動いているレビューを止めない
+    # 続けて push したら、同じ PR の古いレビューを止める。job が飛ばされた実行（下書きなど）が、動いているレビューを止めないよう、job に置く
     concurrency:
       group: claude-review-${{ github.event.pull_request.number }}
       cancel-in-progress: true
@@ -28,7 +26,6 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          # TEMP: push のたびに前と同じ指摘を繰り返さないよう、まとめにインラインの指摘の一覧を入れてもらい、次のレビューでそれを確かめる
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
