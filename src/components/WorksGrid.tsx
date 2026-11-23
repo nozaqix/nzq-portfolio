@@ -19,7 +19,7 @@ interface WorksGridProps {
   basePath?: string;
 }
 
-export default function WorksGrid({ posts, basePath = '/works' }: WorksGridProps) {
+export default function WorksGrid({ posts, basePath = '/discography' }: WorksGridProps) {
   return (
     <div className="w-full max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-10 md:gap-x-16 gap-y-16 md:gap-y-20">
       {posts.map((post) => (

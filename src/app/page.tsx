@@ -13,7 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const posts = getAllPosts();
+  // TEMP: journal を加えたので、トップは今までどおり制作楽曲だけを並べる（トップのデザインは要検討）
+  const posts = getAllPosts('discography');
   
   // プリロードする画像URLのリストを作成
   const DEFAULT_THUMBNAIL = 'https://assets.nozaqi.work/nzq/portfolio/images/portfolio.png';
