@@ -5,9 +5,9 @@ import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import remarkGfm from 'remark-gfm';
 
-export type ContentSection = 'works';
+export type ContentSection = 'works' | 'devlog';
 
-const CONTENT_SECTIONS: ContentSection[] = ['works'];
+const CONTENT_SECTIONS: ContentSection[] = ['works', 'devlog'];
 
 function getPostsDirectory(section: ContentSection): string {
   return typeof process !== 'undefined' && process.cwd
